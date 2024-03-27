@@ -35,7 +35,11 @@ export const searchProducts = async (query) => {
 
 // Adds a new product to the database
 export const addProduct = (product) => {
-    return axios.post(`${BASE_URL}/add`, JSON.stringify(product));
+    return axios.post(`${BASE_URL}/add`, JSON.stringify(product), {
+        headers: {
+        'Content-Type': 'application/json',
+        }
+    });
 };
 
 // Edits an existing product by ID
