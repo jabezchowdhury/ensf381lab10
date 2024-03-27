@@ -1,14 +1,26 @@
+"""
+=========================================================
+Name        : server.py
+Assignment  : Lab 10, Exercise A, B, C
+Author(s)   : Yuecheng Sun, Jabez Chowdhury
+Submission  : Mar 27, 2024
+Description : Flask.
+=========================================================
+"""
+import json
+
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import json
-import os
+
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000", "http://localhost:5000"])  # Enable CORS for all domains on all routes
 
+
 def load_products():
     with open('products.json', 'r') as f:
         return json.load(f)['products']
+
 
 # Route for getting all products
 @app.route('/products', methods=['GET'])
@@ -25,6 +37,7 @@ def get_products(product_id=None):
         # Note: You might want to change this if you want to return a single product not wrapped in a list
         return jsonify(product) if product else ('', 404)
 
+
 # Route for adding a new product
 @app.route('/products/add', methods=['POST'])
 def add_product():
@@ -35,6 +48,7 @@ def add_product():
     with open('products.json', 'w') as f:
         json.dump({"products": products}, f)
     return jsonify(new_product), 201
+
 
 # Route for updating a product
 @app.route('/products/<int:product_id>', methods=['PUT'])
@@ -50,6 +64,7 @@ def update_product(product_id):
     else:
         return jsonify({"error": "Product not found"}), 404
 
+
 # Route for deleting a product
 @app.route('/products/<int:product_id>', methods=['DELETE'])
 def remove_product(product_id):
@@ -63,10 +78,12 @@ def remove_product(product_id):
     else:
         return jsonify({"error": "Product not found"}), 404
 
+
 # Route for serving product images
 @app.route('/product-images/<path:filename>')
 def get_image(filename):
     return send_from_directory('product-images', filename)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
